@@ -55,6 +55,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
 
+    // Naver 지도
+    implementation(libs.map.sdk)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
