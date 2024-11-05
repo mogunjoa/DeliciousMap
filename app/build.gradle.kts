@@ -58,6 +58,11 @@ dependencies {
     // Naver 지도
     implementation(libs.map.sdk)
 
+    // retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
+    implementation(libs.moshi.kotlin)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
