@@ -18,5 +18,9 @@
         android:layout_gravity="top"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/bottomSheetLayout"
+        layout="@layout/bottom_sheet"/>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
