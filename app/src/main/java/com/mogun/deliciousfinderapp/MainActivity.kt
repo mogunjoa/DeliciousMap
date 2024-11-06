@@ -10,7 +10,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.mogun.deliciousfinderapp.databinding.ActivityMainBinding
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.geometry.Tm128
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
@@ -58,10 +57,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                 val searchItemList = response.body()?.items.orEmpty()
 
                                 if (searchItemList.isEmpty()) {
-                                    Toast.makeText(this@MainActivity, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "검색 결과가 없습니다.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                     return
-                                } else if(!isMapInit) {
-                                    Toast.makeText(this@MainActivity, "오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                                } else if (!isMapInit) {
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "오류가 발생했습니다.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                     return
                                 }
 
@@ -73,10 +80,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                 // 마커 추가
                                 markers = searchItemList.map {
                                     Marker(
-                                        Tm128(
-                                            it.mapx.toDouble(),
-                                            it.mapy.toDouble()
-                                        ).toLatLng()
+                                        LatLng(
+                                            it.mapy.toDouble() / 1_000_0000,
+                                            it.mapx.toDouble()/ 1_000_0000,
+                                        )
                                     ).apply {
                                         captionText = it.title
                                         map = naverMap
@@ -151,7 +158,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun moveCamera(position: LatLng, zoomLevel: Double) {
-        if(isMapInit.not()) return
+        if (isMapInit.not()) return
 
         val cameraUpdate = CameraUpdate.scrollAndZoomTo(position, zoomLevel)
             .animate(CameraAnimation.Easing)

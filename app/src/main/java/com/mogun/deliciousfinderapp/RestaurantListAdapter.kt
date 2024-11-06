@@ -6,22 +6,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mogun.deliciousfinderapp.databinding.ItemRestaurantBinding
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.geometry.Tm128
 
-class RestaurantListAdapter(private val onClick: (LatLng) -> Unit): RecyclerView.Adapter<RestaurantListAdapter.ViewHolder>() {
+class RestaurantListAdapter(private val onClick: (LatLng) -> Unit) :
+    RecyclerView.Adapter<RestaurantListAdapter.ViewHolder>() {
 
     private var dataSet = emptyList<SearchItem>()
 
 
-    inner class ViewHolder(private val binding: ItemRestaurantBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemRestaurantBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SearchItem) {
             binding.titleTextView.text = item.title
             binding.categoryTextView.text = item.category
             binding.locationTextView.text = item.roadAddress
 
             binding.root.setOnClickListener {
-                onClick(Tm128(item.mapx.toDouble(), item.mapy.toDouble()).toLatLng())
-
+                onClick(
+                    LatLng(
+                        item.mapy.toDouble() / 1_000_0000,
+                        item.mapx.toDouble() / 1_000_0000,
+                    )
+                )
             }
         }
     }
