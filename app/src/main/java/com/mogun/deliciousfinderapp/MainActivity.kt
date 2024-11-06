@@ -5,7 +5,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mogun.deliciousfinderapp.databinding.ActivityMainBinding
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.Tm128
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
@@ -22,6 +24,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var naverMap: NaverMap
     private var isMapInit = false
 
+    private var restaurantListAdapter = RestaurantListAdapter {
+        moveCamera(it)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -30,9 +36,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
         binding.bottomSheetLayout.searchResultRecyclerView.apply {
-
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = restaurantListAdapter
         }
-
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -67,10 +73,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                     }
                                 }
 
+                                restaurantListAdapter.setData(searchItemList)
+
                                 // 검색 결과의 첫번째 결과 값으로 position 이동
-                                val cameraUpdate = CameraUpdate.scrollTo(markers.first().position)
-                                    .animate(CameraAnimation.Easing)
-                                naverMap.moveCamera(cameraUpdate)
+                                moveCamera(markers.first().position)
                             }
 
                             override fun onFailure(call: Call<SearchResult>, t: Throwable) {
@@ -129,5 +135,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(mapObject: NaverMap) {
         naverMap = mapObject
         isMapInit = true
+    }
+
+    fun moveCamera(position: LatLng) {
+        if(isMapInit.not()) return
+
+        val cameraUpdate = CameraUpdate.scrollTo(position)
+            .animate(CameraAnimation.Easing)
+        naverMap.moveCamera(cameraUpdate)
     }
 }
